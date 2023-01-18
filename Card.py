@@ -1,8 +1,7 @@
-'''
-    Card class is all 52 cards defined
-'''
+"""
+    Card class: builds a card using suit and rank
+"""
 
-import random
 
 suits = ('Hearts', 'Diamonds', 'Spades', 'Clubs')
 ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace')

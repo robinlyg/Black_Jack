@@ -1,6 +1,6 @@
 '''Non_Dealer class inherits player
     for players that are not dealers
-    they do not have auto play, must make their own calls
+    they do not have autoplay, must make their own calls
 '''
 
 from Card import values
@@ -8,14 +8,13 @@ from Player import Player
 
 
 class Non_Dealer(Player):
+    """Call is made to super but non dealer has an extra attribute, balance"""
 
     def __init__(self, name, balance):
         super(Non_Dealer, self).__init__(name)
-        self.hand = []
         self.balance = balance
-        self.value = 0
-        self.bet = 0
-        self.card_value = 0
+
+    '''Non dealer has an extra check to make when making a bet, they can not bet over their balance'''
 
     def place_bet(self):
 
@@ -28,25 +27,24 @@ class Non_Dealer(Player):
                 self.balance -= self.bet
                 break
 
-    def hit(self, deck):
-        r = deck.deal_one_card()
-        self.hand.append(r)
-        return r
-
-    def stand(self):
-        pass
+    '''A non dealer has to make more decisions than a dealer when theres an Ace involved'''
 
     def hand_value(self):
-        # if theres an Ace that can be 1 or 11, players choice
-        # if theres an Ace that can be 1 or 11, players choice
+
+        # add each value to a list for easy calculation
         v = [values[card.rank] for card in self.hand]
+        # c is our choice on ace value when one appears, the initial value of an Ace is 1
         c = 0
+        # check if any cards in hand are an Ace, if so a determination on value of the ace is made
         for card in self.hand:
+            # if there is an Ace we display the possible values and allow the user to choose
             if card.rank == 'Ace':
                 print('This hand has two possible totals')
-                print(f'\t1. The Ace as 11 = {sum(v, 10)}')
                 print(f'\t2. The Ace as 1: {sum(v)}')
+                # the initial value of an Ace is 1 so we add 10 to the sum of the hand
+                print(f'\t1. The Ace as 11 = {sum(v, 10)}')
 
+                # use a while loop and try/except to ensure correct input
                 i = 0
                 while i != 1 or i != 11:
                     try:
@@ -62,35 +60,34 @@ class Non_Dealer(Player):
                     except:
                         print("Whoops wrong entry type")
                         continue
+        # if no ace, present the sum and set self card_value to sum of hand
         else:
             print(f'The value of your hand is {sum(v, c)}')
             self.card_value = sum(v, c)
 
-    def print_hand(self):
-        super(Non_Dealer, self).print_hand()
-
-    def print_one_card(self):
-        print(self.hand[0])
+    '''a turn is a loop allowing the player to hit or stand'''
 
     def turn(self, deck):
-        # self.place_bet()
-        # print()
-
+        # present the player with their hand and its value
         print(f'{self.name} your current hand is: ')
         self.print_hand()
         self.hand_value()
 
+        # if the value of the hand is greater than 21 it's a bust and turn ends
         if self.card_value > 21:
             print('BUST!')
             # return to main control and the next turn occurs
             return
 
         print()
-
+        # if not a bust they have the choice to hit or stand
         while True:
 
+            # ask player if they want to hit or stand
             play = input("Enter 'y' enter for an additional card or 'n' to stand: ").capitalize()
 
+            # if a hit we deal another card, show that card and the new value of the hand
+            # also check if the new value is over 21 and a bust, if so end turn
             if play == 'Y':
                 print()
                 # lets show what card was delt
@@ -107,6 +104,7 @@ class Non_Dealer(Player):
             elif play == 'N':
                 print(f'{self.name} your turn has ended.')
                 break
+            # if y or n is not entered we ask the user to try again and allow the loop to continue
             else:
                 print('***Incorrect entry, try again.***')
 
